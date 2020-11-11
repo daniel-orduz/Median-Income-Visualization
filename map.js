@@ -29,8 +29,9 @@ var path = d3.geo.path()               // path generator that will convert GeoJS
 
 var color = d3.scale.quantize()
     .domain(d3.range(36000, 77000, 1))
-    .range(['lightcyan', 'lightsteelblue', 'cornflowerblue', 'mediumblue']);
+    .range(["#F7FBFF", "#DEEBF7", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B"]);
 
+//['lightcyan', 'lightsteelblue', 'cornflowerblue', 'mediumblue']
 
 // // Define linear scale for output
 // var color = d3.scale.linear()
