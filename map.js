@@ -11,10 +11,31 @@ var projection = d3.geo.albersUsa()
 var path = d3.geo.path()               // path generator that will convert GeoJSON to SVG paths
     .projection(projection);  // tell path generator to use albersUsa projection
 
+// const range_array = [];
+// var preload_data = d3.csv("income_data.csv", function (data) {
+//
+//     data.sort(function(x, y){  //look at entry x and entry y
+//
+//         //x.frequency > y.frequency? yes, x should come first
+//         return d3.descending( x.Median_Income, y.Median_Income);
+//     });
+//
+//    for (let i = 0; i < data.length; i++) {
+//        range_array.push(data[i].Median_Income);
+//    }
+// });
 
-// Define linear scale for output
-var color = d3.scale.linear()
-    .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
+
+
+var color = d3.scale.quantize()
+    .domain(d3.range(36000, 77000, 1))
+    .range(['lightcyan', 'lightsteelblue', 'cornflowerblue', 'mediumblue']);
+
+
+// // Define linear scale for output
+// var color = d3.scale.linear()
+//     .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
+
 
 var legendText = ["Option1", "Option2", "Option3", "Option4"];
 
@@ -32,17 +53,18 @@ var div = d3.select("body")
 
 // Load in my states data!
 d3.csv("income_data.csv", function(data) {
-    color.domain([0, 1, 2, 3]); // setting the range of the input data
+    //color.domain([0, 1, 2, 3]); // setting the range of the input data
 
     d3.json("us_states.json", function(json) {
         for (var i = 0; i < data.length; i ++) {
-            //console.log(data[i].State);
+            // console.log("Before Income")
+            // console.log(data[i].Median_Income);
 
             // Grab State Name
             var dataState = data[i].State;
 
             // Grab data value
-            var dataValue = data[i].testField;
+            var dataValue = data[i].Median_Income;
 
             // Find the corresponding state inside the GeoJSON
             for (var j = 0; j < json.features.length; j++)  {
@@ -70,6 +92,7 @@ d3.csv("income_data.csv", function(data) {
 
                 // Get data value
                 var value = d.properties.test_value;
+                console.log(color(1));
 
                 if (value) {
                     //If value exists…
