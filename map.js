@@ -1,6 +1,7 @@
 //Width and height of map
-var width = 960;
-var height = 500;
+var width = 1080;
+var height = 720;
+var margin = 100;
 
 // D3 Projection
 var projection = d3.geo.albersUsa()
@@ -25,26 +26,73 @@ var path = d3.geo.path()               // path generator that will convert GeoJS
 //    }
 // });
 
+var x = d3.scale.linear()
+    .domain([36000, 77000])
+    .rangeRound([800, 1000]);
 
 
 var color = d3.scale.quantize()
     .domain(d3.range(36000, 77000, 1))
     .range(["#F7FBFF", "#DEEBF7", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B"]);
 
-//['lightcyan', 'lightsteelblue', 'cornflowerblue', 'mediumblue']
-
-// // Define linear scale for output
-// var color = d3.scale.linear()
-//     .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
-
-
-var legendText = ["Option1", "Option2", "Option3", "Option4"];
 
 //Create SVG element and append map to the SVG
-var svg = d3.select("body")
-    .append("svg")
+var svg = d3.select("svg")
     .attr("width", width)
     .attr("height", height);
+
+// Background
+// svg.append("rect")
+//     .attr("width", "100%")
+//     .attr("height", "100%")
+//     .attr("fill", "#41B3A3");
+
+// Add Title text
+svg.append("text")
+    .attr("x", width/2)
+    .attr("y", (margin/2))
+    .attr("text-anchor", "middle")
+    .attr("font-weight", 900)
+    .style("font-size", "24px")
+    .style("font-family", "Alegrya")
+    .style("fill", "white")
+    .text("Median Income Chloropleth, United States, 1984");
+
+
+var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(0,40)");
+
+g.selectAll("rect")
+    .data(color.range().map(function(d) {
+        d = color.invertExtent(d);
+        if (d[0] == null) {
+            d[0] = x.domain()[0];
+        }
+        if (d[1] == null) d[1] = x.domain()[1];
+        console.log(d);
+        return d;
+    }))
+    .enter().append("rect")
+    .attr("height", 8)
+    .attr("x", function(d) {
+        console.log("X1: " + x(1));
+        return x(d[0]); })
+    .attr("y", height - margin + 10)
+    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+    .attr("fill", function(d) { return color(d[0]); });
+
+g.append("text")
+    .attr("class", "caption")
+    .attr("x", x.range()[0])
+    .attr("y", height - margin)
+    .attr("fill", "#000")
+    .attr("text-anchor", "start")
+    .attr("font-weight", "bold")
+    .text("Unemployment rate");
+
+
+
 
 // Append Div for tooltip to SVG
 var div = d3.select("body")
@@ -58,8 +106,6 @@ d3.csv("income_data.csv", function(data) {
 
     d3.json("us_states.json", function(json) {
         for (var i = 0; i < data.length; i ++) {
-            // console.log("Before Income")
-            // console.log(data[i].Median_Income);
 
             // Grab State Name
             var dataState = data[i].State;
@@ -73,7 +119,7 @@ d3.csv("income_data.csv", function(data) {
 
                 if (dataState == jsonState) {
                     // Copy the data value into the JSON
-                    json.features[j].properties.test_value = dataValue;
+                    json.features[j].properties.median_income = dataValue;
                     break;
 
                 }
@@ -92,8 +138,7 @@ d3.csv("income_data.csv", function(data) {
             .style("fill", function(d) {
 
                 // Get data value
-                var value = d.properties.test_value;
-                console.log(color(1));
+                var value = d.properties.median_income;
 
                 if (value) {
                     //If value exists…
@@ -102,6 +147,19 @@ d3.csv("income_data.csv", function(data) {
                     //If value is undefined…
                     return "rgb(213,222,217)";
                 }
+            }).on("mouseover", function(d) {
+                console.log(d)
+            div.transition()
+                .duration(200)
+                .style("opacity", .8);
+            div.html("State: " + d.properties.name + "<br>" + "Median Income: $" + d.properties.median_income)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 60) + "px")
+                .style("background-color", "white");
+            }).on("mouseout", function(d) {
+                div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
             });
     });
 

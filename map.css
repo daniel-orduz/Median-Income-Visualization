@@ -1,15 +1,32 @@
 
-.states :hover {
-    fill: steelblue;
+path:hover {
+    fill-opacity: .7;
 }
 
-.state-borders {
-    fill: none;
-    stroke: #fff;
-    stroke-width: 0.5px;
-    stroke-linejoin: round;
-    stroke-linecap: round;
+/* Style for Custom Tooltip */
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    /*width: 100px;*/
+    padding: 4px;
+    font: 12px sans-serif;
+    background: white;
+    border: 0px;
+    border-radius: 8px;
     pointer-events: none;
+}
+
+/* Legend Font Style */
+body {
+    font: 11px sans-serif;
+    background-color: cadetblue;
+}
+
+/* Legend Position Style */
+.legend {
+    position:absolute;
+    left:800px;
+    top:350px;
 }
 
 .q0-9 { fill:rgb(247,251,255); }

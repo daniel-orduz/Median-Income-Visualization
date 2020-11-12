@@ -1,4 +1,4 @@
-Year,State,Historical Minimum Wage,CPI.Average,Inflation Adjusted Minimum Wage (2018),Median_Income,Same as Federal,testField
+Year,State,Historical_Minimum_Wage,CPI.Average,Inflation Adjusted Minimum Wage (2018),Median_Income,Same as Federal,testField
 1984,Mississippi,3.35,103.9,8.07,36263,Y,0
 1984,Arkansas,2.7,103.9,6.51,36837,N,1
 1984,Tennessee,3.35,103.9,8.07,39441,Y,0
