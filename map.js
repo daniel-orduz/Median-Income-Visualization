@@ -4,12 +4,12 @@ var height = 720;
 var margin = 100;
 
 // D3 Projection
-var projection = d3.geo.albersUsa()
+var projection = d3.geoAlbersUsa()
     .translate([width/2, height/2])    // translate to center of screen
     .scale([1000]);          // scale things down so see entire US
 
 // Define path generator
-var path = d3.geo.path()               // path generator that will convert GeoJSON to SVG paths
+var path = d3.geoPath()               // path generator that will convert GeoJSON to SVG paths
     .projection(projection);  // tell path generator to use albersUsa projection
 
 // const range_array = [];
@@ -26,13 +26,13 @@ var path = d3.geo.path()               // path generator that will convert GeoJS
 //    }
 // });
 
-var x = d3.scale.linear()
+var x = d3.scaleLinear()
     .domain([36000, 77000])
     .rangeRound([800, 1000]);
 
 
-var color = d3.scale.quantize()
-    .domain(d3.range(36000, 77000, 1))
+var color = d3.scaleQuantize()
+    .domain([36000, 77000])
     .range(["#F7FBFF", "#DEEBF7", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B"]);
 
 
@@ -41,11 +41,6 @@ var svg = d3.select("svg")
     .attr("width", width)
     .attr("height", height);
 
-// Background
-// svg.append("rect")
-//     .attr("width", "100%")
-//     .attr("height", "100%")
-//     .attr("fill", "#41B3A3");
 
 // Add Title text
 svg.append("text")
@@ -70,13 +65,13 @@ g.selectAll("rect")
             d[0] = x.domain()[0];
         }
         if (d[1] == null) d[1] = x.domain()[1];
-        console.log(d);
+        //console.log(d);
         return d;
     }))
     .enter().append("rect")
     .attr("height", 8)
     .attr("x", function(d) {
-        console.log("X1: " + x(1));
+        //console.log("X1: " + x(1));
         return x(d[0]); })
     .attr("y", height - margin + 10)
     .attr("width", function(d) { return x(d[1]) - x(d[0]); })
@@ -86,12 +81,10 @@ g.append("text")
     .attr("class", "caption")
     .attr("x", x.range()[0])
     .attr("y", height - margin)
-    .attr("fill", "#000")
     .attr("text-anchor", "start")
     .attr("font-weight", "bold")
+    .attr("fill", "white")
     .text("Unemployment rate");
-
-
 
 
 // Append Div for tooltip to SVG
@@ -100,67 +93,65 @@ var div = d3.select("body")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+
+var income = [];
+
 // Load in my states data!
 d3.csv("income_data.csv", function(data) {
-    //color.domain([0, 1, 2, 3]); // setting the range of the input data
 
-    d3.json("us_states.json", function(json) {
-        for (var i = 0; i < data.length; i ++) {
+    // Grab State Name
+    var dataState = data.State;
+    //console.log(dataState);
 
-            // Grab State Name
-            var dataState = data[i].State;
+    // Grab Median Income
+    var dataValue = data.Median_Income;
 
-            // Grab data value
-            var dataValue = data[i].Median_Income;
+    income.push({
+        state: dataState,
+        m_income: dataValue
+    });
 
-            // Find the corresponding state inside the GeoJSON
-            for (var j = 0; j < json.features.length; j++)  {
-                var jsonState = json.features[j].properties.name;
+});
 
-                if (dataState == jsonState) {
-                    // Copy the data value into the JSON
-                    json.features[j].properties.median_income = dataValue;
-                    break;
 
+d3.json("us_states.json").then( function(json) {
+
+    // Bind the data to the SVG and create one path per GeoJSON feature
+    svg.selectAll("path")
+        .data(json.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .style("stroke", "#fff")
+        .style("stroke-width", "1")
+        .style("fill", function(d) {
+
+            var value;
+            for (var i = 0; i < income.length; i++) {
+                if (income[i].state == d.properties.name) {
+                    value = income[i].m_income;
+                    d.properties.median_income = value;
                 }
             }
 
-        }
-
-        // Bind the data to the SVG and create one path per GeoJSON feature
-        svg.selectAll("path")
-            .data(json.features)
-            .enter()
-            .append("path")
-            .attr("d", path)
-            .style("stroke", "#fff")
-            .style("stroke-width", "1")
-            .style("fill", function(d) {
-
-                // Get data value
-                var value = d.properties.median_income;
-
-                if (value) {
-                    //If value exists…
-                    return color(value);
-                } else {
-                    //If value is undefined…
-                    return "rgb(213,222,217)";
-                }
-            }).on("mouseover", function(d) {
-                console.log(d)
-            div.transition()
-                .duration(200)
-                .style("opacity", .8);
-            div.html("State: " + d.properties.name + "<br>" + "Median Income: $" + d.properties.median_income)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 60) + "px")
-                .style("background-color", "white");
-            }).on("mouseout", function(d) {
-                div.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            });
+            // check value and map it to the correct colour based on the colour scale
+            if (value) {
+                return color(value);
+            } else {
+                //If value is undefined…
+                return "rgb(213,222,217)";
+            }
+        }).on("mouseover", function(d, i) {
+        div.transition()
+            .duration(200)
+            .style("opacity", .8);
+        div.html("State: " + i.properties.name + "<br>" + "Median Income: $" + i.properties.median_income)
+            .style("left", (d.pageX + 10) + "px")
+            .style("top", (d.pageY - 20) + "px")
+            .style("background-color", "white");
+    }).on("mouseout", function(d) {
+        div.transition()
+            .duration(500)
+            .style("opacity", 0);
     });
-
 });
