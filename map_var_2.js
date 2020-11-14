@@ -33,7 +33,7 @@ var x = d3.scaleLinear()
 
 var color = d3.scaleQuantize()
     .domain([36000, 77000])
-    .range(["#F7FBFF", "#DEEBF7", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B"]);
+    .range(["#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#f5f5f5", "#c7eae5", "#80cdc1", "#35978f", "#01665e"]);
 
 
 //Create SVG element and append map to the SVG
@@ -49,7 +49,7 @@ svg.append("text")
     .attr("text-anchor", "middle")
     .attr("font-weight", 900)
     .style("font-size", "24px")
-    .style("font-family", "Alegrya")
+    .style("font-family", "Courier")
     .style("fill", "white")
     .text("Median Income Chloropleth, United States, 1984");
 
@@ -86,13 +86,14 @@ g.append("text")
     .attr("fill", "white")
     .text("Unemployment rate");
 
-g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 620)")
+g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 640)")
     .call(d3.axisBottom(x)
         .tickSize(13)
         .tickFormat(function(x, i) { return i ? x : x; })
         .tickValues(color.domain()))
     .select(".domain")
     .remove();
+
 
 
 // Append Div for tooltip to SVG

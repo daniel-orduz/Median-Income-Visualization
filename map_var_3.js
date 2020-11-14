@@ -27,13 +27,13 @@ var path = d3.geoPath()               // path generator that will convert GeoJSO
 // });
 
 var x = d3.scaleLinear()
-    .domain([36000, 77000])
+    .domain([1, 4])
     .rangeRound([800, 1000]);
 
 
 var color = d3.scaleQuantize()
-    .domain([36000, 77000])
-    .range(["#F7FBFF", "#DEEBF7", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B"]);
+    .domain([1, 4])
+    .range(["#f1eef6", "#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#034e7b"]);
 
 
 //Create SVG element and append map to the SVG
@@ -49,9 +49,9 @@ svg.append("text")
     .attr("text-anchor", "middle")
     .attr("font-weight", 900)
     .style("font-size", "24px")
-    .style("font-family", "Alegrya")
+    .style("font-family", "Courier")
     .style("fill", "white")
-    .text("Median Income Chloropleth, United States, 1984");
+    .text("Minimum Wage Chloropleth, United States, 1984");
 
 
 var g = svg.append("g")
@@ -84,9 +84,9 @@ g.append("text")
     .attr("text-anchor", "start")
     .attr("font-weight", "bold")
     .attr("fill", "white")
-    .text("Unemployment rate");
+    .text("Historical Minimum Wage ($)");
 
-g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 620)")
+g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 640)")
     .call(d3.axisBottom(x)
         .tickSize(13)
         .tickFormat(function(x, i) { return i ? x : x; })
@@ -109,10 +109,9 @@ d3.csv("income_data.csv", function(data) {
 
     // Grab State Name
     var dataState = data.State;
-    //console.log(dataState);
 
     // Grab Median Income
-    var dataValue = data.Median_Income;
+    var dataValue = data.Historical_Minimum_Wage;
 
     income.push({
         state: dataState,
@@ -153,7 +152,7 @@ d3.json("us_states.json").then( function(json) {
         div.transition()
             .duration(200)
             .style("opacity", .8);
-        div.html("State: " + i.properties.name + "<br>" + "Median Income: $" + i.properties.median_income)
+        div.html("State: " + i.properties.name + "<br>" + "Minimum Wage: $" + i.properties.median_income)
             .style("left", (d.pageX + 10) + "px")
             .style("top", (d.pageY - 20) + "px")
             .style("background-color", "white");

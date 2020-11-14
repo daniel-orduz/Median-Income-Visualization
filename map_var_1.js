@@ -72,18 +72,27 @@ g.selectAll("rect")
     .attr("height", 8)
     .attr("x", function(d) {
         return x(d[0]); })
-    .attr("y", height - margin + 10)
+    .attr("y", height - margin - 10)
     .attr("width", function(d) { return x(d[1]) - x(d[0]); })
     .attr("fill", function(d) { return color(d[0]); });
 
 g.append("text")
     .attr("class", "caption")
     .attr("x", x.range()[0])
-    .attr("y", height - margin)
+    .attr("y", height - margin-20)
     .attr("text-anchor", "start")
     .attr("font-weight", "bold")
     .attr("fill", "white")
     .text("Median Income (Inflation Adjusted)");
+
+
+g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 620)")
+    .call(d3.axisBottom(x)
+    .tickSize(13)
+    .tickFormat(function(x, i) { return i ? x : x; })
+    .tickValues(color.domain()))
+    .select(".domain")
+    .remove();
 
 
 // Append Div for tooltip to SVG
