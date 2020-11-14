@@ -49,7 +49,7 @@ svg.append("text")
     .attr("text-anchor", "middle")
     .attr("font-weight", 900)
     .style("font-size", "24px")
-    .style("font-family", "Alegrya")
+    .style("font-family", "Courier")
     .style("fill", "white")
     .text("Median Income Chloropleth, United States, 1984");
 
@@ -84,9 +84,9 @@ g.append("text")
     .attr("text-anchor", "start")
     .attr("font-weight", "bold")
     .attr("fill", "white")
-    .text("Unemployment rate");
+    .text("Median Income");
 
-g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 620)")
+g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 630)")
     .call(d3.axisBottom(x)
         .tickSize(13)
         .tickFormat(function(x, i) { return i ? x : x; })

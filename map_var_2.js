@@ -84,7 +84,7 @@ g.append("text")
     .attr("text-anchor", "start")
     .attr("font-weight", "bold")
     .attr("fill", "white")
-    .text("Unemployment rate");
+    .text("Median Income ($)");
 
 g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 640)")
     .call(d3.axisBottom(x)

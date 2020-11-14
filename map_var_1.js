@@ -136,7 +136,7 @@ d3.json("us_states.json").then( function(json) {
         div.transition()
             .duration(200)
             .style("opacity", .8);
-        div.html("State: " + i.properties.name + "<br>" + "Median Income: $" + i.properties.median_income)
+        div.html("State: " + i.properties.name + "<br>" + "Median Income: $" + i.properties.m_income)
             .style("left", (d.pageX + 10) + "px")
             .style("top", (d.pageY - 20) + "px")
             .style("background-color", "white");

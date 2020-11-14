@@ -19,7 +19,16 @@ div.tooltip {
 /* Legend Font Style */
 body {
     font: 11px sans-serif;
-    background-color: #315284;
+    background-color: #5E5A51;
+}
+
+
+options {
+    background-color: #0C3152;
+    background-color: #7C9ADE;
+    background-color: #035487;
+    background-color: #5E5A51;
+    background-color: #1A1B38;
 }
 
 .axisBar {
