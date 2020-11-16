@@ -51,7 +51,7 @@ svg.append("text")
     .style("font-size", "24px")
     .style("font-family", "Courier")
     .style("fill", "white")
-    .text("Median Income Chloropleth, United States, 1984");
+    .text("Median Income Choropleth, United States, 1984");
 
 
 var g = svg.append("g")
