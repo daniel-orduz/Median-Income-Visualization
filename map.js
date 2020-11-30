@@ -3,6 +3,8 @@ var width = 1080;
 var height = 720;
 var margin = 100;
 
+times = d3.utcYears(Date.UTC(1984, 0, 1), Date.UTC(1999, 0, 1))
+
 // D3 Projection
 var projection = d3.geoAlbersUsa()
     .translate([width/2, height/2])    // translate to center of screen
@@ -71,22 +73,22 @@ g.selectAll("rect")
     .enter().append("rect")
     .attr("height", 8)
     .attr("x", function(d) {
-        //console.log("X1: " + x(1));
-        return x(d[0]); })
-    .attr("y", height - margin + 10)
+        //console.log("X1: " + x(1))
+        return x(d[0]) + 40; })
+    .attr("y", height - margin-90)
     .attr("width", function(d) { return x(d[1]) - x(d[0]); })
     .attr("fill", function(d) { return color(d[0]); });
 
 g.append("text")
     .attr("class", "caption")
-    .attr("x", x.range()[0])
-    .attr("y", height - margin)
+    .attr("x", x.range()[0] + 40)
+    .attr("y", height - margin-95)
     .attr("text-anchor", "start")
     .attr("font-weight", "bold")
     .attr("fill", "white")
     .text("Median Income");
 
-g.append("g").attr("class", "axisBar").attr("transform", "translate(0, 630)")
+g.append("g").attr("class", "axisBar").attr("transform", "translate(40, 540)")
     .call(d3.axisBottom(x)
         .tickSize(13)
         .tickFormat(function(x, i) { return i ? x : x; })
@@ -163,3 +165,27 @@ d3.json("us_states.json").then( function(json) {
             .style("opacity", 0);
     });
 });
+
+// const slider = d3.sliderBottom()
+//     .min(d3.min(times))
+//     .max(d3.max(times))
+//     .marks(times)
+//     .width(400)
+//     .tickFormat(d3.utcFormat("%Y"))
+//     .tickValues(times)
+//     .on("onchange", () => console.log("sliding"));
+//
+// svg.call(slider);
+//
+// // var group = svg.append('g')
+// //     .attr('class', 'grouped')
+//
+//
+//
+// svg.select('.slider')
+//     .attr("transform", "translate(40, 640)");
+// svg.select('.axis')
+//     .attr("transform", "translate(40, 640)");
+
+
+

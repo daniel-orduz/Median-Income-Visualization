@@ -19,7 +19,16 @@ div.tooltip {
 /* Legend Font Style */
 body {
     font: 11px sans-serif;
-    background-color: #0C3152;
+    background-color: #0A1B2B;
+}
+
+
+.slider text{
+    font-size: 14px;
+}
+
+#slider-simple text{
+    font-size: 14px;
 }
 
 
@@ -35,8 +44,6 @@ options {
     fill: white;
     stroke: white;
 }
-
-
 
 
 /* Legend Position Style */
